@@ -1,4 +1,4 @@
-const app = require("./express-app");
+const app = require("./index");
 
 const PORT = Number(process.env.PORT) || 4000;
 
