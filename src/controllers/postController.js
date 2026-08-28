@@ -39,7 +39,7 @@ const postController = {
 
   async remove(req, res, next) {
     try {
-      await postService.remove(req.params.id);
+      await postService.remove(req.params.id, req.body);
       res.status(204).send();
     } catch (error) {
       next(error);
