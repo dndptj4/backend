@@ -16,7 +16,7 @@ function normalize(body = {}) {
 
 router.get("/", async (_req, res, next) => {
   try {
-    const posts = await prisma.post.findMany({
+    const posts = await prisma.cards.findMany({
       orderBy: { createdAt: "desc" },
     });
     res.json(posts);
@@ -27,7 +27,7 @@ router.get("/", async (_req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const post = await prisma.post.findUnique({
+    const post = await prisma.cards.findUnique({
       where: { id: req.params.id },
     });
 
@@ -49,7 +49,7 @@ router.post("/", async (req, res, next) => {
       return res.status(400).json({ message: "제목과 내용을 입력해 주세요." });
     }
 
-    const post = await prisma.post.create({
+    const post = await prisma.cards.create({
       data: { title, content, author },
     });
 
@@ -61,7 +61,7 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const existing = await prisma.post.findUnique({
+    const existing = await prisma.cards.findUnique({
       where: { id: req.params.id },
     });
 
@@ -75,7 +75,7 @@ router.put("/:id", async (req, res, next) => {
       return res.status(400).json({ message: "제목과 내용을 입력해 주세요." });
     }
 
-    const post = await prisma.post.update({
+    const post = await prisma.cards.update({
       where: { id: req.params.id },
       data: { title, content, author },
     });
@@ -88,7 +88,7 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    const existing = await prisma.post.findUnique({
+    const existing = await prisma.cards.findUnique({
       where: { id: req.params.id },
     });
 
@@ -96,7 +96,7 @@ router.delete("/:id", async (req, res, next) => {
       return res.status(404).json({ message: "게시글을 찾을 수 없습니다." });
     }
 
-    await prisma.post.delete({ where: { id: req.params.id } });
+    await prisma.cards.delete({ where: { id: req.params.id } });
     res.status(204).send();
   } catch (error) {
     next(error);

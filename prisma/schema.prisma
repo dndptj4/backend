@@ -9,7 +9,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Post {
+model Cards {
   id        String   @id @default(cuid())
   title     String
   content   String

@@ -48,4 +48,4 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: "서버 오류가 발생했습니다." });
 });
 
-module.exports = { app };
+module.exports = app;
