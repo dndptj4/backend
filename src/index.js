@@ -24,7 +24,7 @@ app.use(
 app.use(express.json());
 
 app.get("/", (_req, res) => {
-  res.json({ ok: true, message: "Card Board API", health: "/api/health" });
+  res.json({ message: "Card Board API" });
 });
 
 app.get("/api/health", (_req, res) => {
