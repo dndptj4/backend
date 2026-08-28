@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { postsRouter } = require("./routes/posts");
+const { AppError } = require("./errors/AppError");
 
 const app = express();
 
@@ -40,6 +41,10 @@ app.use((_req, res) => {
 app.use((err, _req, res, _next) => {
   if (err.message === "Not allowed by CORS") {
     return res.status(403).json({ message: "CORS 정책에 의해 차단되었습니다." });
+  }
+
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({ message: err.message });
   }
 
   if (!process.env.DATABASE_URL) {
