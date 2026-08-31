@@ -23,25 +23,9 @@ function normalize(body = {}) {
   return { title, content, author, password };
 }
 
-function validatePassword(password) {
-  if (!password) {
-    throw new AppError("비밀번호를 입력해 주세요.", 400);
-  }
-}
-
-function validatePostInput({ title, content, password, requirePassword }) {
+function validatePostInput({ title, content }) {
   if (!title || !content) {
     throw new AppError("제목과 내용을 입력해 주세요.", 400);
-  }
-
-  if (requirePassword) {
-    validatePassword(password);
-  }
-}
-
-function verifyPassword(existing, password) {
-  if (existing.password !== password) {
-    throw new AppError("비밀번호가 일치하지 않습니다.", 403);
   }
 }
 
@@ -63,7 +47,7 @@ const postService = {
 
   async create(body) {
     const payload = normalize(body);
-    validatePostInput({ ...payload, requirePassword: true });
+    validatePostInput(payload);
 
     const created = await postRepository.create({
       title: payload.title,
@@ -76,15 +60,8 @@ const postService = {
   },
 
   async update(id, body) {
-    const existing = await postRepository.findById(id);
-
-    if (!existing) {
-      throw new AppError("게시글을 찾을 수 없습니다.", 404);
-    }
-
     const payload = normalize(body);
-    validatePostInput({ ...payload, requirePassword: true });
-    verifyPassword(existing, payload.password);
+    validatePostInput(payload);
 
     const updated = await postRepository.update(id, {
       title: payload.title,
@@ -95,17 +72,7 @@ const postService = {
     return omitPassword(updated);
   },
 
-  async remove(id, body = {}) {
-    const existing = await postRepository.findById(id);
-
-    if (!existing) {
-      throw new AppError("게시글을 찾을 수 없습니다.", 404);
-    }
-
-    const { password } = normalize(body);
-    validatePassword(password);
-    verifyPassword(existing, password);
-
+  async remove(id) {
     await postRepository.delete(id);
   },
 };
